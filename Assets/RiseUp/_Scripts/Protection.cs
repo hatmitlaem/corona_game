@@ -4,14 +4,7 @@ using UnityEngine;
 
 public class Protection : MonoBehaviour
 {
-    [HideInInspector]
     public Rigidbody2D rb;
-
-    private void Start()
-    {
-        rb = GetComponent<Rigidbody2D>();
-    }
-
     public void RemoveVelocity()
     {
         rb.velocity = Vector2.zero;

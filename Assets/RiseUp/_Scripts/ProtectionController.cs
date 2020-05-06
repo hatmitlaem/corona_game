@@ -4,10 +4,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class ProtectionController : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
-{ 
+{
     public Protection protection;
-    private Vector3 lastMousePosition, lastPos;
+    private Vector3 lastMousePosition;
     private Vector2 limitSize;
+    public bool isDrag = false;
+    public float speed = 1f;
 
     void Start()
     {
@@ -17,14 +19,14 @@ public class ProtectionController : MonoBehaviour, IBeginDragHandler, IDragHandl
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if(!MainController.IsClassicMode() && MainController.IsLoaded())
+        if (!MainController.IsClassicMode() && MainController.IsLoaded())
         {
             MainController.instance.StartGame();
         }
         if (MainController.IsPlaying())
         {
             lastMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            lastPos = protection.transform.position;
+            isDrag = true;
         }
     }
 
@@ -32,37 +34,29 @@ public class ProtectionController : MonoBehaviour, IBeginDragHandler, IDragHandl
     {
         if (MainController.IsPlaying())
         {
+            isDrag = true;
+        }
+    }
+
+    void Update()
+    {
+        if (isDrag)
+        {
             Vector3 currMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector3 delta = currMousePos - lastMousePosition;
-            Vector2 newPos = lastPos + delta;
+            Vector3 delta = (currMousePos - lastMousePosition).normalized * speed * Time.deltaTime;
+            Vector2 newPos = (Vector3)protection.rb.position + delta;
             newPos.x = Mathf.Clamp(newPos.x, -limitSize.x, limitSize.x);
             newPos.y = Mathf.Clamp(newPos.y, -limitSize.y, limitSize.y);
 
             protection.rb.MovePosition(newPos);
             protection.RemoveVelocity();
 
-            if (newPos.x == -limitSize.x || newPos.x == limitSize.x || newPos.y == -limitSize.y || newPos.y == limitSize.y)
-            {
-                lastMousePosition = currMousePos;
-                lastPos = protection.transform.position;
-            }
-        }
-    }
-
-    void Update()
-    {
-        Vector2 newPos = protection.transform.position;
-        newPos.x = Mathf.Clamp(newPos.x, -limitSize.x, limitSize.x);
-        newPos.y = Mathf.Clamp(newPos.y, -limitSize.y, limitSize.y);
-        if (protection.transform.position.x != newPos.x || protection.transform.position.y != newPos.y)
-        {
-            protection.rb.MovePosition(newPos);
-            protection.RemoveVelocity();
+            lastMousePosition = currMousePos;
         }
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-
+        isDrag = false;
     }
 }
