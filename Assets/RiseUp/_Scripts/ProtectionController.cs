@@ -6,10 +6,10 @@ using UnityEngine.EventSystems;
 public class ProtectionController : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public Protection protection;
-    private Vector3 lastMousePosition;
+    private Vector3 lastMousePosition, lastPos;
     private Vector2 limitSize;
-    public bool isDrag = false;
-    public float speed = 1f;
+    //public bool isDrag = false;
+    //public float speed = 1f;
 
     void Start()
     {
@@ -26,7 +26,8 @@ public class ProtectionController : MonoBehaviour, IBeginDragHandler, IDragHandl
         if (MainController.IsPlaying())
         {
             lastMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            isDrag = true;
+            lastPos = protection.transform.position;
+            //isDrag = true;
         }
     }
 
@@ -34,29 +35,52 @@ public class ProtectionController : MonoBehaviour, IBeginDragHandler, IDragHandl
     {
         if (MainController.IsPlaying())
         {
-            isDrag = true;
-        }
-    }
-
-    void Update()
-    {
-        if (isDrag)
-        {
+            //isDrag = true;
             Vector3 currMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector3 delta = (currMousePos - lastMousePosition).normalized * speed * Time.deltaTime;
-            Vector2 newPos = (Vector3)protection.rb.position + delta;
+            Vector3 delta = currMousePos - lastMousePosition;
+            Vector2 newPos = lastPos + delta;
             newPos.x = Mathf.Clamp(newPos.x, -limitSize.x, limitSize.x);
             newPos.y = Mathf.Clamp(newPos.y, -limitSize.y, limitSize.y);
 
             protection.rb.MovePosition(newPos);
             protection.RemoveVelocity();
 
-            lastMousePosition = currMousePos;
+            if (newPos.x == -limitSize.x || newPos.x == limitSize.x || newPos.y == -limitSize.y || newPos.y == limitSize.y)
+            {
+                lastMousePosition = currMousePos;
+                lastPos = protection.transform.position;
+            }
+        
+        }
+    }
+
+    void Update()
+    {
+        //if (isDrag)
+        //{
+        //    Vector3 currMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //    Vector3 delta = (currMousePos - lastMousePosition).normalized * speed * Time.deltaTime;
+        //    Vector2 newPos = (Vector3)protection.rb.position + delta;
+        //    newPos.x = Mathf.Clamp(newPos.x, -limitSize.x, limitSize.x);
+        //    newPos.y = Mathf.Clamp(newPos.y, -limitSize.y, limitSize.y);
+
+        //    protection.rb.MovePosition(newPos);
+        //    protection.RemoveVelocity();
+
+        //    lastMousePosition = currMousePos;
+        //}
+        Vector2 newPos = protection.transform.position;
+        newPos.x = Mathf.Clamp(newPos.x, -limitSize.x, limitSize.x);
+        newPos.y = Mathf.Clamp(newPos.y, -limitSize.y, limitSize.y);
+        if (protection.transform.position.x != newPos.x || protection.transform.position.y != newPos.y)
+        {
+            protection.rb.MovePosition(newPos);
+            protection.RemoveVelocity();
         }
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        isDrag = false;
+        //isDrag = false;
     }
 }
