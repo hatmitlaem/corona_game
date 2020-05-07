@@ -262,7 +262,7 @@ PlayerSettings:
   templateDefaultScene: 
   AndroidTargetArchitectures: 1
   AndroidSplashScreenScale: 2
-  androidSplashScreen: {fileID: 2800000, guid: 3d796b25626bb6348bf19d5790842589, type: 3}
+  androidSplashScreen: {fileID: 0}
   AndroidKeystoreName: ./user.keystore
   AndroidKeyaliasName: superpow
   AndroidBuildApkPerCpuArchitecture: 0
