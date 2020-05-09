@@ -36,8 +36,8 @@ public class Music : MonoBehaviour
 
     public void Play(Music.Type type)
     {
-        if (type == Type.None) return;
-        if (currentType != type || !audioSource.isPlaying)
+        if (type == Type.None) { Stop(); }
+        else if (currentType != type || !audioSource.isPlaying)
         {
             StartCoroutine(PlayNewMusic(type));
         }
@@ -50,6 +50,7 @@ public class Music : MonoBehaviour
 
     public void Stop()
     {
+        currentType = Music.Type.None;
         audioSource.Stop();
     }
 
