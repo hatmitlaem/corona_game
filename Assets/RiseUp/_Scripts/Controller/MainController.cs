@@ -12,9 +12,9 @@ public class MainController : BaseController {
     public List<GroupObstacle> obstaclePrefabs;
     private int colorIndex = 0, backCount = 0;
     private BackItem lastBack = null;
-    public enum GameState {START, LOADED, PLAYING, GAME_OVER, COMPLETED, GUIDE, SHOP, PAUSED};
+    public enum GameState {START, LOADED, PLAYING, GAME_OVER, COMPLETED, GUIDE, SHOP, PAUSED, HIGHSCORE};
     public static GameState gameState = GameState.START, lastState = GameState.START;
-    public GameObject startFrame, guideFrame, shopFrame, gameTitle;
+    public GameObject startFrame, guideFrame, shopFrame, gameTitle, highScoreFrame;
     public Protection protection;
     public ChallengeController challengeController;
     public ClassicController classicController;
@@ -148,13 +148,14 @@ public class MainController : BaseController {
         player.gameObject.SetActive(gameState != GameState.GUIDE && gameState != GameState.SHOP);
 
         guideFrame.SetActive(gameState == GameState.GUIDE);
+        highScoreFrame.SetActive(gameState == GameState.HIGHSCORE);
         shopFrame.SetActive(gameState == GameState.SHOP);
         gameTitle.SetActive(gameState == GameState.START);
 
         classicController.ShowGameOver(IsClassicMode() && gameState == GameState.GAME_OVER);
         classicController.ShowLevelAndScore(IsClassicMode() && (IsPlaying() || gameState == GameState.GAME_OVER));
 
-        challengeController.ShowHomeBtn(!IsClassicMode() && !IsPlaying() && gameState != GameState.GUIDE && gameState != GameState.SHOP);
+        challengeController.ShowHomeBtn(!IsClassicMode() && !IsPlaying() && gameState != GameState.GUIDE && gameState != GameState.SHOP && gameState != GameState.HIGHSCORE);
         challengeController.ShowProgressLevel(!IsClassicMode() && (IsPlaying() || gameState == GameState.LOADED || gameState == GameState.GAME_OVER));
         challengeController.ShowGuide(!IsClassicMode() && gameState == GameState.LOADED);
         challengeController.ShowDialog(!IsClassicMode() && (gameState == GameState.COMPLETED || gameState == GameState.GAME_OVER));
@@ -196,7 +197,12 @@ public class MainController : BaseController {
         obstacle.transform.localScale = Vector3.one;
     }
 
-
+    public void ShowHighScore()
+    {
+        Sound.instance.PlayButton();
+        SetState(GameState.HIGHSCORE);
+        UpdateUI();
+    }
     public void ShowGuide()
     {
         Sound.instance.PlayButton();
