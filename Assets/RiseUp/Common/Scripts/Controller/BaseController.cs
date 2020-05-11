@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using Superpow;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,16 +26,15 @@ public class BaseController : MonoBehaviour
 
     protected virtual void Start()
     {
+        music = (Music.Type)Utils.GetMusic();
         CPlayerPrefs.Save();
         if (music == Music.Type.MainMusic)
         {
-            music = Music.Type.None;
-            btnMusic.gameObject.GetComponent<Image>().sprite = offSoundSprite;
+            btnMusic.gameObject.GetComponent<Image>().sprite = onSoundSprite;
         }
         else
         {
-            music = Music.Type.MainMusic;
-            btnMusic.gameObject.GetComponent<Image>().sprite = onSoundSprite;
+            btnMusic.gameObject.GetComponent<Image>().sprite = offSoundSprite;
         }
         Music.instance.Play(music);
     }
@@ -65,6 +65,7 @@ public class BaseController : MonoBehaviour
         }
         CPlayerPrefs.Save();
         Music.instance.Play(music);
+        Utils.SetMusic((int)music);
     }
 
 }

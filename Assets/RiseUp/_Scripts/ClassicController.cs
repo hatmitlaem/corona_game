@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using Superpow;
 
-public class ClassicController : MonoBehaviour {
+public class ClassicController : MonoBehaviour
+{
 
     public GameObject gameOverTitle, scoreObj, levelObj;
     public Text scoreText, levelText, gameOverScoreText, bestScoreText;
@@ -54,15 +55,38 @@ public class ClassicController : MonoBehaviour {
         gameOverScoreText.text = score.ToString();
         if (isShow)
         {
-            int best = Utils.GetBestScore();
-            if (best < score)
-            {
-                Utils.SetBestScore(score);
-            }
+            UpdateRank(score);
         }
         bestScoreText.text = Utils.GetBestScore().ToString();
     }
 
+    private void UpdateRank(int score)
+    {
+        List<int> scoreList = new List<int>();
+        scoreList.Add(Utils.GetBestScore());
+        scoreList.Add(Utils.Get2ndScore());
+        scoreList.Add(Utils.Get3rdScore());
+        scoreList.Add(Utils.Get4thScore());
+        scoreList.Add(Utils.Get5thScore());
+
+        for (int i = 0; i < scoreList.Count; i++)
+        {
+            if (scoreList[i] < score)
+            {
+                for (int j = scoreList.Count - 1; j > i; j--)
+                {
+                    scoreList[j] = scoreList[j - 1];
+                }
+                scoreList[i] = score;
+                break;
+            }
+        }
+        Utils.SetBestScore(scoreList[0]);
+        Utils.Set2ndScore(scoreList[1]);
+        Utils.Set3rdScore(scoreList[2]);
+        Utils.Set4thScore(scoreList[3]);
+        Utils.Set5thScore(scoreList[4]);
+    }
     private void FixedUpdate()
     {
         if (MainController.IsPlaying())

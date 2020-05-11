@@ -26,12 +26,50 @@
         {
             CPlayerPrefs.SetInt("best_scored", value);
         }
-
+        public static void Set2ndScore(int value)
+        {
+            CPlayerPrefs.SetInt("2nd_scored", value);
+        }
+        public static void Set3rdScore(int value)
+        {
+            CPlayerPrefs.SetInt("3rd_scored", value);
+        }
+        public static void Set4thScore(int value)
+        {
+            CPlayerPrefs.SetInt("4th_scored", value);
+        }
+        public static void Set5thScore(int value)
+        {
+            CPlayerPrefs.SetInt("5th_scored", value);
+        }
         public static int GetBestScore()
         {
             return CPlayerPrefs.GetInt("best_scored", 0);
         }
-
+        public static int Get2ndScore()
+        {
+            return CPlayerPrefs.GetInt("2nd_scored", 0);
+        }
+        public static int Get3rdScore()
+        {
+            return CPlayerPrefs.GetInt("3rd_scored", 0);
+        }
+        public static int Get4thScore()
+        {
+            return CPlayerPrefs.GetInt("4th_scored", 0);
+        }
+        public static int Get5thScore()
+        {
+            return CPlayerPrefs.GetInt("5th_scored", 0);
+        }
+        public static void SetMusic(int value)
+        {
+            CPlayerPrefs.SetInt("music", value);
+        }
+        public static int GetMusic()
+        {
+            return CPlayerPrefs.GetInt("music", 1);
+        }
         public static readonly int CLASSIC_MODE = 0, CHALLENGE_MODE = 1;
 
         public static int GetGroupObIndex(string name)
