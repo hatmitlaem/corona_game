@@ -5,11 +5,18 @@ using UnityEngine;
 public class Obstacle : MonoBehaviour {
     protected Rigidbody2D rigid;
     protected bool isMoveObs;
+	
     public bool noGravity;
+	
+	SpriteRenderer m_SpriteRenderer;
+	
+	Color originalColor;
     public virtual void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
         transform.SetParent(MainController.instance.spawnRegion);
+		m_SpriteRenderer = GetComponent<SpriteRenderer>();
+		originalColor = m_SpriteRenderer.color;
     }
 
     public void StartFall(bool hasCollision = false)
@@ -42,5 +49,16 @@ public class Obstacle : MonoBehaviour {
             else
                 StartFall(true);
         }
+		if (gameObject.tag == "Obstacle" && collision.collider.tag == "Protection")
+		{
+			m_SpriteRenderer.color = Color.red;
+		}
     }
+	void OnCollisionExit2D(Collision2D collision)
+	{
+		if (gameObject.tag == "Obstacle" && collision.collider.tag == "Protection")
+		{
+			m_SpriteRenderer.color = originalColor;
+		}
+	}
 }
